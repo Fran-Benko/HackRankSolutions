@@ -1,0 +1,36 @@
+import pandas as pd
+import seaborn as sns
+
+#Standard Input stream (STDIN)
+if __name__ == '__main__':
+    timeCharged = float(input())
+    
+#Import the data & Creating a data frame   
+df=pd.read_csv("trainingdata.txt",names=("Time","Battery Level"))
+
+#Plot the data
+sns.scatterplot(x="Time",y="Battery Level",data=df)
+
+#Taking only the charging phrase 
+df2=df[df["Battery Level"]<8]
+
+#Tranform the training data to a DataFrame form 
+X_train_t = df2["Time"].to_frame()
+y_train_t = df2["Battery Level"].to_frame()
+
+#Importing & Training a Linear Regression Model 
+from sklearn.linear_model import LinearRegression
+regresor=LinearRegression()
+regresor.fit(X_train_t, y_train_t.values)
+
+#Searching the minimun amount of time that complete the battery level
+filt=df[df["Battery Level"]==8]
+filt=min(filt["Time"])
+
+#Predict & Print the value
+if timeCharged >= filt:
+    result=float(8)
+    print(result)
+else:
+    result=regresor.predict([[timeCharged]])
+    print(result[0][0])
