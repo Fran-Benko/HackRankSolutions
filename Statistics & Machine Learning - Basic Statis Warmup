@@ -1,0 +1,50 @@
+@author: francobenko
+
+import pandas as pd
+import numpy as np
+
+#Standard Input stream (STDIN) (Input Method in HackRank)
+n=int(input())
+ingreso=input()
+
+"""
+#Input if you want to try it in a python IDE
+ingreso="64630 11735 14216 99233 14470 4978 73429 38120 51135 67060"
+v=0
+i=0
+"""
+
+pos_espa=[]
+#Transformation of the string input to a list of values
+for i in range(len(ingreso)-1):
+    if ingreso[i]== " ":
+        pos_espa.append(int(i))
+        v=v+1
+values=[]
+values.append(int(ingreso[0:pos_espa[0]])) #transformation for the first value
+try:
+    for j in range(0,len(pos_espa)):
+        values.append(int(ingreso[pos_espa[j]+1:pos_espa[j+1]]))
+except IndexError: #transformation for the last value
+    values.append(int(ingreso[pos_espa[len(pos_espa)-1]:len(ingreso)]))
+
+#Creating a data frame
+df=pd.DataFrame(values)
+
+#Calculating basic statistics of the sample
+mean_i=df[0].mean()
+mode_i=df[0].mode().min()
+median_i=df[0].median()
+std_i=np.std(df[0])
+#Calculating the standard deviation of the population
+std_p=std_i/np.sqrt(len(values))
+#Calculating the Confindence Intervals
+upp_conf=mean_i+(1.96*std_p)
+low_conf=mean_i-(1.96*std_p)
+
+#Printing the values with one value after dot
+print("%.1f"%mean_i)
+print("%.1f"%median_i)
+print("%.0f"%mode_i)
+print("%.1f"%std_i)
+print("%.1f"%low_conf, "%.1f"%upp_conf)
